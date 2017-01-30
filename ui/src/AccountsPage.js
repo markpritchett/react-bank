@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
+import Account from './Account';
+
 class AccountsPage extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             accounts: []
         };
@@ -16,17 +17,16 @@ class AccountsPage extends Component {
                 this.setState({ accounts: accounts });
             });
     }
-
+    
     render() {
         return (
             <div>
                 <h2>Accounts</h2>
-                <pre>
-                    {JSON.stringify(this.state.accounts)}
-                </pre>
+                <div>
+                    {this.state.accounts.map(account => <Account key={account.id} {...account} />)}
+                </div>
             </div>
         );
     }
 }
-
 export default AccountsPage;

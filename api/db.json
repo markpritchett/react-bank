@@ -10,5 +10,23 @@
       "name": "Savings",
       "balance": 111.22
     }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "date": "2017-01-30T19:40:00.000Z",
+      "description": "Costa",
+      "debit": 4.59,
+      "credit": null,
+      "accountId": 1
+    },
+    {
+      "id": 2,
+      "date": "2017-01-29T00:00:00.000Z",
+      "description": "Payment Received (Wage)",
+      "debit": null,
+      "credit": 0.01,
+      "accountId": 1
+    }
   ]
 }

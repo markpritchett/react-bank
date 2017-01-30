@@ -7,6 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import App from './App';
 import WelcomePage from './WelcomePage';
 import AccountsPage from './AccountsPage';
+import TransactionsPage from './TransactionsPage';
 
 import './root.css';
 
@@ -19,6 +20,7 @@ const Root = () => (
                 <Route path="/" component={App}>
                     <IndexRoute component={WelcomePage} />
                     <Route path="accounts" component={AccountsPage} />
+                    <Route path="accounts/:accountId/transactions" component={TransactionsPage} />
                 </Route>
             </Router>
         </div>
