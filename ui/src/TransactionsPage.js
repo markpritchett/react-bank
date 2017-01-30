@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { browserHistory } from 'react-router';
+
 import Subheader from 'material-ui/Subheader';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
@@ -33,10 +35,14 @@ class TransactionsPage extends Component {
             });
     }
 
+    goToAccounts() {
+        browserHistory.push('/accounts');
+    }
+
     render() {
         return (
             <div>
-                <FlatButton href="/accounts" label="Back to accounts" primary={true} />
+                <FlatButton onClick={() => this.goToAccounts()} label="Back to accounts" primary={true} />
 
                 <h2>{this.state.account.name} Transactions</h2>
 

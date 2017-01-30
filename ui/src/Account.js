@@ -8,12 +8,13 @@ import formatMoney from './formatMoney';
 const Account = ({
     id,
     name,
-    balance
+    balance,
+    viewTransactions
 }) => (
         <Card key={id}>
             <CardTitle title={name} subtitle={`Balance ${formatMoney(balance)}`} />
             <CardActions>
-                <FlatButton href={`/accounts/${id}/transactions`} label="View Transactions" primary={true} />
+                <FlatButton onClick={() => viewTransactions(id)} label="View Transactions" primary={true} />
             </CardActions>
         </Card>
     );

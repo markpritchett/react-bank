@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { browserHistory } from 'react-router';
+
 import Account from './Account';
 
 class AccountsPage extends Component {
@@ -17,13 +19,17 @@ class AccountsPage extends Component {
                 this.setState({ accounts: accounts });
             });
     }
-    
+
+    goToTransactions(id) {
+        browserHistory.push(`/accounts/${id}/transactions`);
+    }
+
     render() {
         return (
             <div>
                 <h2>Accounts</h2>
                 <div>
-                    {this.state.accounts.map(account => <Account key={account.id} {...account} />)}
+                    {this.state.accounts.map(account => <Account key={account.id} {...account} viewTransactions={this.goToTransactions} />)}
                 </div>
             </div>
         );
