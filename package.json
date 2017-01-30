@@ -1,0 +1,15 @@
+{
+  "name": "react-bank",
+  "version": "0.1.0",
+  "scripts": {
+    "setup": "./setup.sh",
+    "start": "concurrently \"npm run ui\" \"npm run api\"",
+    "ui": "cd ui && npm start",
+    "api": "cd api && npm start"
+  },
+  "author": "Mark Pritchett",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^3.1.0"
+  }
+}
