@@ -1,12 +1,31 @@
-import React from 'react';
+import React, { Component } from 'react';
+
+import { browserHistory } from 'react-router'
 
 import AppBar from 'material-ui/AppBar';
 
-const App = (props) => (
-  <div>
-    <AppBar showMenuIconButton={false} title="React Bank" />
-    {props.children}
-  </div>
-);
+const styles = {
+  title: {
+    cursor: 'pointer',
+  },
+};
+
+class App extends Component {
+  goHome() {
+    browserHistory.push('/')
+  }
+  render() {
+    return (
+      <div>
+        <AppBar
+          title={<span style={styles.title}>React Bank</span>}
+          onTitleTouchTap={() => this.goHome()}
+          showMenuIconButton={false}
+        />
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
 export default App;
