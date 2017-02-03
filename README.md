@@ -9,9 +9,7 @@ API project uses a fake REST API thanks to [json-server](https://github.com/typi
 
 ## Getting Started
 
-Install node packages:
-
-``` npm run setup ```
+Open a terminal / command prompt and run the ``` setup.sh ``` file to install node packages.
 
 The above installs the node dependencies for the main package.json file, along
 with dependencies for the API and UI projects.
