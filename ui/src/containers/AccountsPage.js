@@ -1,27 +1,25 @@
-import React, { Component } from 'react';
-
-import { browserHistory } from 'react-router';
-
-import Account from './Account';
+import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
+import Account from '../components/Account'
 
 class AccountsPage extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             accounts: []
-        };
+        }
     }
 
     componentDidMount() {
         fetch('http://localhost:3001/accounts')
             .then(response => response.json())
             .then(accounts => {
-                this.setState({ accounts: accounts });
-            });
+                this.setState({ accounts: accounts })
+            })
     }
 
     goToTransactions(id) {
-        browserHistory.push(`/accounts/${id}/transactions`);
+        browserHistory.push(`/accounts/${id}/transactions`)
     }
 
     render() {
@@ -32,7 +30,7 @@ class AccountsPage extends Component {
                     {this.state.accounts.map(account => <Account key={account.id} {...account} viewTransactions={this.goToTransactions} />)}
                 </div>
             </div>
-        );
+        )
     }
 }
-export default AccountsPage;
+export default AccountsPage

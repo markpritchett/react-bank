@@ -1,42 +1,39 @@
-import React, { Component } from 'react';
-
-import { browserHistory } from 'react-router';
-
-import Subheader from 'material-ui/Subheader';
-import Paper from 'material-ui/Paper';
-import FlatButton from 'material-ui/FlatButton';
-
-import formatMoney from './formatMoney';
-import TransactionList from './TransactionList';
+import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
+import Subheader from 'material-ui/Subheader'
+import Paper from 'material-ui/Paper'
+import FlatButton from 'material-ui/FlatButton'
+import formatMoney from '../formatMoney'
+import TransactionList from '../components/TransactionList'
 
 class TransactionsPage extends Component {
     constructor(props) {
-        super(props);
+        super(props)
 
         this.state = {
             account: {},
             transactions: []
-        };
+        }
     }
 
     componentDidMount() {
-        let accountId = this.props.params.accountId;
+        let accountId = this.props.params.accountId
 
         fetch(`http://localhost:3001/accounts/${accountId}`)
             .then(response => response.json())
             .then(account => {
-                this.setState({ account: account });
-            });
+                this.setState({ account: account })
+            })
 
         fetch(`http://localhost:3001/transactions?accountId=${accountId}`)
             .then(response => response.json())
             .then(transactions => {
-                this.setState({ transactions: transactions });
-            });
+                this.setState({ transactions: transactions })
+            })
     }
 
     goToAccounts() {
-        browserHistory.push('/accounts');
+        browserHistory.push('/accounts')
     }
 
     render() {
@@ -58,8 +55,8 @@ class TransactionsPage extends Component {
                     }
                 </Paper>
             </div>
-        );
+        )
     }
 }
 
-export default TransactionsPage;
+export default TransactionsPage

@@ -1,9 +1,7 @@
-import React from 'react';
-
-import { Card, CardTitle, CardActions } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-
-import formatMoney from './formatMoney';
+import React from 'react'
+import { Card, CardTitle, CardActions } from 'material-ui/Card'
+import FlatButton from 'material-ui/FlatButton'
+import formatMoney from '../formatMoney'
 
 const Account = ({
     id,
@@ -17,6 +15,6 @@ const Account = ({
                 <FlatButton onClick={() => viewTransactions(id)} label="View Transactions" primary={true} />
             </CardActions>
         </Card>
-    );
+    )
 
-export default Account;
+export default Account

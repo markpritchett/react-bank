@@ -6,6 +6,6 @@ const WelcomePage = () => (
         <h2>Welcome to React Bank</h2>
         <Link to="/accounts">View Accounts</Link>
     </div>
-);
+)
 
-export default WelcomePage;
+export default WelcomePage

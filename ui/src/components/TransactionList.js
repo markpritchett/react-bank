@@ -1,13 +1,10 @@
-import React from 'react';
-
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-
+import React from 'react'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
-
-import formatMoney from './formatMoney';
+import formatMoney from '../formatMoney'
 
 const formatDisplayAmount = (amount) => {
-    return amount ? formatMoney(amount) : ' - ';
+    return amount ? formatMoney(amount) : ' - '
 }
 
 const TransactionList = ({
@@ -37,6 +34,6 @@ const TransactionList = ({
                 }
             </TableBody>
         </Table>
-    );
+    )
 
-export default TransactionList;
+export default TransactionList

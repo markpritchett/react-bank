@@ -3,11 +3,11 @@ const formatMoney = (amount) => {
         style: 'currency',
         currency: 'GBP',
         minimumFractionDigits: 2,
-    });
+    })
 
-    let formattedValue = formatter.format(amount);
+    let formattedValue = formatter.format(amount)
 
-    return formattedValue;
-};
+    return formattedValue
+}
 
-export default formatMoney;
+export default formatMoney
