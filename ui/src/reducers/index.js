@@ -2,7 +2,6 @@ import * as ActionTypes from '../actions'
 import { routerReducer as routing } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
-// Updates error message to notify about the failed fetches.
 const errorMessage = (state = null, action) => {
   const { type, error } = action
 
@@ -15,9 +14,29 @@ const errorMessage = (state = null, action) => {
   return state
 }
 
+const accounts = (state = {
+  isFetching: false,
+  items: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.REQUEST_ACCOUNTS:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case ActionTypes.RECEIVE_ACCOUNTS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        items: action.accounts
+      })
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
     errorMessage,
-    routing
+    routing,
+    accounts
 })
 
 export default rootReducer
