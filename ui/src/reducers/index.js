@@ -33,10 +33,30 @@ const accounts = (state = {
   }
 }
 
+const transactions = (state = {
+  isFetching: false,
+  items: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.REQUEST_TRANSACTIONS:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case ActionTypes.RECEIVE_TRANSACTIONS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        items: action.transactions
+      })
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
     errorMessage,
     routing,
-    accounts
+    accounts,
+    transactions
 })
 
 export default rootReducer

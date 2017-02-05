@@ -1,35 +1,17 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
+import { connect } from 'react-redux'
 import Subheader from 'material-ui/Subheader'
 import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
+import { fetchTransactions } from '../actions'
 import formatMoney from '../formatMoney'
 import TransactionList from '../components/TransactionList'
 
 class TransactionsPage extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            account: {},
-            transactions: []
-        }
-    }
-
     componentDidMount() {
-        let accountId = this.props.params.accountId
-
-        fetch(`http://localhost:3001/accounts/${accountId}`)
-            .then(response => response.json())
-            .then(account => {
-                this.setState({ account: account })
-            })
-
-        fetch(`http://localhost:3001/transactions?accountId=${accountId}`)
-            .then(response => response.json())
-            .then(transactions => {
-                this.setState({ transactions: transactions })
-            })
+        const { dispatch, accountId } = this.props
+        dispatch(fetchTransactions(accountId))
     }
 
     goToAccounts() {
@@ -37,21 +19,23 @@ class TransactionsPage extends Component {
     }
 
     render() {
+        const { account, transactions } = this.props
+        console.log(account)
         return (
             <div>
                 <FlatButton onClick={() => this.goToAccounts()} label="Back to accounts" primary={true} />
 
-                <h2>{this.state.account.name} Transactions</h2>
+                <h2>{account.name} Transactions</h2>
 
                 <Paper zDepth={1}>
-                    <Subheader>Account balance {formatMoney(this.state.account.balance)}</Subheader>
+                    <Subheader>Account balance {formatMoney(account.balance)}</Subheader>
                     {
-                        this.state.transactions.length === 0 &&
+                        transactions.length === 0 &&
                         <Subheader>No transactions available</Subheader>
                     }
                     {
-                        this.state.transactions.length > 0 &&
-                        <TransactionList transactions={this.state.transactions} />
+                        transactions.length > 0 &&
+                        <TransactionList transactions={transactions} />
                     }
                 </Paper>
             </div>
@@ -59,4 +43,15 @@ class TransactionsPage extends Component {
     }
 }
 
-export default TransactionsPage
+const mapStateToProps = (state, ownProps) => {
+    const accountId = parseInt(ownProps.params.accountId, 10)
+    const { accounts, transactions } = state
+
+    return {
+        accountId,
+        account: accounts.items.find(a => a.id === accountId),
+        transactions: transactions.items
+    }
+}
+
+export default connect(mapStateToProps)(TransactionsPage)
