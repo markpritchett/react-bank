@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import AppBar from 'material-ui/AppBar'
 import { resetErrorMessage } from '../actions'
+import './app.css'
 
 const styles = {
   title: {
@@ -47,7 +48,7 @@ class App extends Component {
   render() {
     const { children } = this.props
     return (
-      <div>
+      <div className="app">
         <AppBar
           title={<span style={styles.title}>React Bank</span>}
           onTitleTouchTap={() => this.goHome()}
