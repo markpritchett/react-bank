@@ -1,11 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router'
+import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import Login from './Login'
 
-const WelcomePage = () => (
-    <div>
-        <h2>Welcome to React Bank</h2>
-        <Link to="/accounts">View Accounts</Link>
-    </div>
-)
+class WelcomePage extends Component {
+    render() {
+        const { authenticated } = this.props
+        return (
+            <div>
+                <h2>Welcome to React Bank</h2>
+                <p>
+                    Enter your username and password
+                </p>
+                <p>
+                    Put anything you like, it's not real :)
+                </p>
+                {
+                    !authenticated && <Login/>
+                }
+            </div>
+        );
+    }
+}
 
-export default WelcomePage
+const mapStateToProps = state => {
+    const { login } = state
+    return {
+        authenticated: login.authenticated
+    }
+}
+
+export default connect(mapStateToProps)(WelcomePage)

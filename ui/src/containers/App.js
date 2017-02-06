@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import AppBar from 'material-ui/AppBar'
-import { resetErrorMessage } from '../actions'
+import { resetErrorMessage, attemptLogout } from '../actions'
 import './app.css'
-
+import Logout from '../components/Logout'
 const styles = {
   title: {
     cursor: 'pointer',
@@ -38,7 +38,7 @@ class App extends Component {
         <b>{errorMessage}</b>
         {' '}
         (<a href="#"
-            onClick={this.handleDismissClick}>
+          onClick={this.handleDismissClick}>
           Dismiss
         </a>)
       </p>
@@ -46,13 +46,14 @@ class App extends Component {
   }
 
   render() {
-    const { children } = this.props
+    const { children, authenticated, onLogoutClick } = this.props
     return (
       <div className="app">
         <AppBar
           title={<span style={styles.title}>React Bank</span>}
           onTitleTouchTap={() => this.goHome()}
           showMenuIconButton={false}
+          iconElementRight={<Logout visible={authenticated} onClick={onLogoutClick} />}
         />
         {this.renderErrorMessage()}
         {children}
@@ -61,10 +62,21 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  errorMessage: state.errorMessage
-})
+const mapStateToProps = state => {
+  const { login } = state
+  return {
+    errorMessage: state.errorMessage,
+    authenticated: login.authenticated
+  }
+}
 
-export default connect(mapStateToProps, {
-  resetErrorMessage
-})(App)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogoutClick: () => {
+      dispatch(attemptLogout())
+    },
+    resetErrorMessage
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
