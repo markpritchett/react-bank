@@ -13,7 +13,10 @@ class AccountsPage extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props
+        const { dispatch, authenticated } = this.props
+        if(!authenticated) {
+            browserHistory.push('/')
+        }
         dispatch(fetchAccounts());
     }
 
@@ -35,10 +38,11 @@ class AccountsPage extends Component {
 }
 
 const mapStateToProps = state => {
-    const { accounts } = state
+    const { accounts, login } = state
     return {
         isFetching: accounts.isFetching,
-        accounts: accounts.items
+        accounts: accounts.items,
+        authenticated: login.authenticated
     }
 }
 

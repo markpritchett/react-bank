@@ -10,7 +10,10 @@ import TransactionList from '../components/TransactionList'
 
 class TransactionsPage extends Component {
     componentDidMount() {
-        const { dispatch, accountId } = this.props
+        const { dispatch, authenticated, accountId } = this.props
+        if(!authenticated) {
+            browserHistory.push('/')
+        }
         dispatch(fetchTransactions(accountId))
     }
 
@@ -45,12 +48,13 @@ class TransactionsPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const accountId = parseInt(ownProps.params.accountId, 10)
-    const { accounts, transactions } = state
+    const { accounts, transactions, login } = state
 
     return {
         accountId,
         account: accounts.items.find(a => a.id === accountId),
-        transactions: transactions.items
+        transactions: transactions.items,
+        authenticated: login.authenticated
     }
 }
 
