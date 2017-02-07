@@ -48,6 +48,18 @@ const accounts = (state = {
         isFetching: true,
         items: action.accounts
       })
+    case ActionTypes.SHOW_NEW_ACCOUNTS_FORM:
+      return Object.assign({}, state, {
+        showNewAccountForm: true
+      })
+    case ActionTypes.HIDE_NEW_ACCOUNTS_FORM:
+      return Object.assign({}, state, {
+        showNewAccountForm: false
+      })
+    case ActionTypes.ACCOUNT_CREATED:
+      return Object.assign({}, state, {
+        items: [...state.items, action.account]
+      })
     default:
       return state
   }

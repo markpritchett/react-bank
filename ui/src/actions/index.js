@@ -12,6 +12,9 @@ export const REQUEST_ACCOUNTS_FAILURE = 'REQUEST_ACCOUNTS_FAILURE'
 export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS'
 export const REQUEST_TRANSACTIONS_FAILURE = 'REQUEST_TRANSACTIONS_FAILURE'
+export const SHOW_NEW_ACCOUNTS_FORM = 'SHOW_NEW_ACCOUNTS_FORM'
+export const HIDE_NEW_ACCOUNTS_FORM = 'HIDE_NEW_ACCOUNTS_FORM'
+export const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
 
 export const resetErrorMessage = () => ({
     type: RESET_ERROR_MESSAGE
@@ -72,7 +75,7 @@ export const fetchAccounts = () => {
             .then(accounts => {
                 dispatch(receiveAccounts(accounts))
             })
-    } 
+    }
 }
 
 export const requestTransactions = accountId => ({
@@ -92,5 +95,33 @@ export const fetchTransactions = accountId => {
             .then(transactions => {
                 dispatch(receiveTransactions(transactions))
             })
-    } 
+    }
+}
+
+export const showNewAccountForm = () => ({
+    type: SHOW_NEW_ACCOUNTS_FORM
+})
+export const hideNewAccountForm = () => ({
+    type: HIDE_NEW_ACCOUNTS_FORM
+})
+export const accountCreated = account => ({
+    type: ACCOUNT_CREATED,
+    account
+})
+export const createAccount = (name, openingBalance) => {
+    return (dispatch) => {
+        fetch('http://localhost:3001/accounts', {
+            method: 'POST',
+            body: JSON.stringify({ name, balance: openingBalance }),
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=utf-8'
+            })
+        })
+        .then(response => response.json())
+        .then(newAccount => {
+            dispatch(accountCreated(newAccount))
+        })
+
+        dispatch(hideNewAccountForm())
+    }
 }
