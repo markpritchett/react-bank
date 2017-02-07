@@ -35,6 +35,9 @@ class AccountsPage extends Component {
                 <FloatingActionButton style={style} title="Create a new account" onTouchTap={onAddAccountClick}>
                     <ContentAdd />
                 </FloatingActionButton>
+                {
+                    showNewAccountForm && <NewAccountDialog />
+                }
             </div>
         )
     }
