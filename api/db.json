@@ -9,11 +9,6 @@
       "id": 2,
       "name": "Savings",
       "balance": 111.22
-    },
-    {
-      "name": "d",
-      "balance": "333",
-      "id": 3
     }
   ],
   "transactions": [
