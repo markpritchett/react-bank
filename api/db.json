@@ -3,12 +3,12 @@
     {
       "id": 1,
       "name": "Current Account",
-      "balance": 123.45
+      "balance": 250.00
     },
     {
       "id": 2,
       "name": "Savings",
-      "balance": 111.22
+      "balance": 125.00
     }
   ],
   "transactions": [

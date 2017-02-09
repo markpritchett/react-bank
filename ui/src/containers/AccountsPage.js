@@ -3,9 +3,12 @@ import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
-import { fetchAccounts, showNewAccountForm } from '../actions'
+import SwapIcon from 'material-ui/svg-icons/action/swap-horiz'
+import FlatButton from 'material-ui/FlatButton'
 import Account from '../components/Account'
 import NewAccountDialog from './NewAccountDialog'
+import TransferFundsDialog from './TransferFundsDialog'
+import { fetchAccounts, showNewAccountForm, showTransferFunds } from '../actions'
 
 const style = {
     float: 'right'
@@ -25,10 +28,21 @@ class AccountsPage extends Component {
     }
 
     render() {
-        const { accounts, isFetching, onAddAccountClick, showNewAccountForm } = this.props
+        const { accounts, isFetching, onAddAccountClick, showNewAccountForm, showTransferFunds, onTransferFundsClick } = this.props
         return (
             <div>
-                <h2>Accounts</h2>
+                <h2>
+                    Accounts
+                    <FlatButton
+                        label="Transfer funds"
+                        style={style}
+                        labelPosition="before"
+                        primary={true}
+
+                        icon={<SwapIcon />}
+                        onTouchTap={onTransferFundsClick}
+                    />
+                </h2>
                 <div>
                     {accounts.map(account => <Account key={account.id} {...account} viewTransactions={this.goToTransactions} />)}
                 </div>
@@ -37,6 +51,9 @@ class AccountsPage extends Component {
                 </FloatingActionButton>
                 {
                     showNewAccountForm && <NewAccountDialog />
+                }
+                {
+                    showTransferFunds && <TransferFundsDialog />
                 }
             </div>
         )
@@ -49,7 +66,8 @@ const mapStateToProps = state => {
         isFetching: accounts.isFetching,
         accounts: accounts.items,
         authenticated: login.authenticated,
-        showNewAccountForm: accounts.showNewAccountForm
+        showNewAccountForm: accounts.showNewAccountForm,
+        showTransferFunds: accounts.showTransferFunds
     }
 }
 
@@ -57,6 +75,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onAddAccountClick: () => {
             dispatch(showNewAccountForm())
+        },
+        onTransferFundsClick: () => {
+            dispatch(showTransferFunds())
         },
         dispatch
     }

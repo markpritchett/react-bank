@@ -60,6 +60,25 @@ const accounts = (state = {
       return Object.assign({}, state, {
         items: [...state.items, action.account]
       })
+    case ActionTypes.SHOW_TRANSFER_FUNDS:
+      return Object.assign({}, state, {
+        showTransferFunds: true
+      })
+    case ActionTypes.HIDE_TRANSFER_FUNDS:
+      return Object.assign({}, state, {
+        showTransferFunds: false
+      })
+    case ActionTypes.UPDATE_ACCOUNT_BALANCE:
+      let index = state.items.indexOf(state.items.find(a => a.id === action.accountId))
+      let account = Object.assign({}, state.items[index], {balance: action.newBalance})
+      let result = Object.assign({}, state, {
+        items: [
+          ...state.items.slice(0, index),
+          account,
+          ...state.items.slice(index + 1)
+        ]
+      })
+      return result
     default:
       return state
   }
@@ -83,10 +102,10 @@ const transactions = (state = {
   }
 }
 const rootReducer = combineReducers({
-    errorMessage,
-    routing,
-    login,
-    accounts,
-    transactions
+  errorMessage,
+  routing,
+  login,
+  accounts,
+  transactions
 })
 export default rootReducer
