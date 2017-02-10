@@ -1,40 +1,21 @@
 import { browserHistory } from 'react-router'
-
-export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
-export const REQUEST_LOGIN = 'REQUEST_LOGIN'
-export const REQUEST_LOGIN_SUCCESS = 'REQUEST_LOGIN_SUCCESS'
-export const REQUEST_LOGIN_FAILURE = 'REQUEST_LOGIN_FAILURE'
-export const REQUEST_LOGOUT = 'REQUEST_LOGOUT'
-export const REQUEST_LOGOUT_SUCCESS = 'REQUEST_LOGOUT_SUCCESS'
-export const REQUEST_ACCOUNTS = 'REQUEST_ACCOUNTS'
-export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
-export const REQUEST_ACCOUNTS_FAILURE = 'REQUEST_ACCOUNTS_FAILURE'
-export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS'
-export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS'
-export const REQUEST_TRANSACTIONS_FAILURE = 'REQUEST_TRANSACTIONS_FAILURE'
-export const SHOW_NEW_ACCOUNTS_FORM = 'SHOW_NEW_ACCOUNTS_FORM'
-export const HIDE_NEW_ACCOUNTS_FORM = 'HIDE_NEW_ACCOUNTS_FORM'
-export const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
-export const SHOW_TRANSFER_FUNDS = 'SHOW_TRANSFER_FUNDS'
-export const HIDE_TRANSFER_FUNDS = 'HIDE_TRANSFER_FUNDS'
-export const TRANSFER_FUNDS_COMPLETE = 'TRANSFER_FUNDS_COMPLETE'
-export const UPDATE_ACCOUNT_BALANCE = 'UPDATE_ACCOUNT_BALANCE'
+import * as types from './constants'
 
 export const resetErrorMessage = () => ({
-    type: RESET_ERROR_MESSAGE
+    type: types.RESET_ERROR_MESSAGE
 })
 
 export const requestLogin = credentials => ({
-    type: REQUEST_LOGIN,
+    type: types.REQUEST_LOGIN,
     credentials
 })
 
 export const loginSuccessful = () => ({
-    type: REQUEST_LOGIN_SUCCESS
+    type: types.REQUEST_LOGIN_SUCCESS
 })
 
 export const loginFailed = errorMessage => ({
-    type: REQUEST_LOGIN_FAILURE,
+    type: types.REQUEST_LOGIN_FAILURE,
     errorMessage
 })
 
@@ -47,11 +28,11 @@ export const attemptLogin = credentials => {
 }
 
 export const requestLogout = () => ({
-    type: REQUEST_LOGOUT
+    type: types.REQUEST_LOGOUT
 })
 
 export const logoutSuccessful = () => ({
-    type: REQUEST_LOGOUT_SUCCESS
+    type: types.REQUEST_LOGOUT_SUCCESS
 })
 
 export const attemptLogout = () => {
@@ -63,18 +44,18 @@ export const attemptLogout = () => {
 }
 
 export const requestAccounts = () => ({
-    type: REQUEST_ACCOUNTS
+    type: types.REQUEST_ACCOUNTS
 })
 
 export const receiveAccounts = (accounts) => ({
-    type: RECEIVE_ACCOUNTS,
+    type: types.RECEIVE_ACCOUNTS,
     accounts
 })
 
 export const fetchAccounts = () => {
-    return (dispatch) => {
+    return dispatch => {
         dispatch(requestAccounts());
-        fetch('http://localhost:3001/accounts')
+        return fetch('http://localhost:3001/accounts')
             .then(response => response.json())
             .then(accounts => {
                 dispatch(receiveAccounts(accounts))
@@ -83,11 +64,11 @@ export const fetchAccounts = () => {
 }
 
 export const requestTransactions = accountId => ({
-    type: REQUEST_TRANSACTIONS
+    type: types.REQUEST_TRANSACTIONS
 })
 
 export const receiveTransactions = (transactions) => ({
-    type: RECEIVE_TRANSACTIONS,
+    type: types.RECEIVE_TRANSACTIONS,
     transactions
 })
 
@@ -103,13 +84,13 @@ export const fetchTransactions = accountId => {
 }
 
 export const showNewAccountForm = () => ({
-    type: SHOW_NEW_ACCOUNTS_FORM
+    type: types.SHOW_NEW_ACCOUNTS_FORM
 })
 export const hideNewAccountForm = () => ({
-    type: HIDE_NEW_ACCOUNTS_FORM
+    type: types.HIDE_NEW_ACCOUNTS_FORM
 })
 export const accountCreated = account => ({
-    type: ACCOUNT_CREATED,
+    type: types.ACCOUNT_CREATED,
     account
 })
 export const createAccount = (name, openingBalance) => {
@@ -131,17 +112,17 @@ export const createAccount = (name, openingBalance) => {
 }
 
 export const showTransferFunds = () => ({
-    type: SHOW_TRANSFER_FUNDS
+    type: types.SHOW_TRANSFER_FUNDS
 })
 export const hideTransferFunds = () => ({
-    type: HIDE_TRANSFER_FUNDS
+    type: types.HIDE_TRANSFER_FUNDS
 })
 export const transferFundsComplete = () => ({
-    type: TRANSFER_FUNDS_COMPLETE
+    type: types.TRANSFER_FUNDS_COMPLETE
 })
 
 export const refreshAccountBalance = (accountId, newBalance) => ({
-    type: UPDATE_ACCOUNT_BALANCE,
+    type: types.UPDATE_ACCOUNT_BALANCE,
     accountId,
     newBalance
 })

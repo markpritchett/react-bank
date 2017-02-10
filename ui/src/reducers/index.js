@@ -1,4 +1,4 @@
-import * as ActionTypes from '../actions'
+import * as ActionTypes from '../actions/constants'
 import { routerReducer as routing } from 'react-router-redux'
 import { combineReducers } from 'redux'
 const errorMessage = (state = null, action) => {
