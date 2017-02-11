@@ -202,9 +202,9 @@ describe('action creators', () => {
             accountId,
             newBalance
         }
-        
+
         const actualAction = actions.refreshAccountBalance(accountId, newBalance)
-        
+
         expect(actualAction).toEqual(expectedAction)
     })
 })
