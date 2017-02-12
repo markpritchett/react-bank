@@ -7,6 +7,8 @@ import * as actions from './asyncActionCreators'
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
+const BASE_URL = process.env.REACT_APP_BASE_URL
+
 describe('async actions', () => {
     afterEach(() => {
         nock.cleanAll()
@@ -17,7 +19,7 @@ describe('async actions', () => {
             { id: 1, name: 'Test Account', balance: 25.01 }
         ]
 
-        nock('http://localhost:3001')
+        nock(BASE_URL)
             .get('/accounts')
             .reply(200, accounts)
 

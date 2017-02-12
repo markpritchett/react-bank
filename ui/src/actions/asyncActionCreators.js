@@ -15,6 +15,8 @@ import {
     hideTransferFunds
 } from './actionCreators'
 
+const BASE_URL = process.env.REACT_APP_BASE_URL
+
 export const attemptLogin = credentials => {
     return (dispatch) => {
         dispatch(requestLogin(credentials))
@@ -34,7 +36,7 @@ export const attemptLogout = () => {
 export const fetchAccounts = () => {
     return dispatch => {
         dispatch(requestAccounts());
-        return fetch('http://localhost:3001/accounts')
+        return fetch(`${BASE_URL}/accounts`)
             .then(response => response.json())
             .then(accounts => {
                 dispatch(receiveAccounts(accounts))
@@ -45,7 +47,7 @@ export const fetchAccounts = () => {
 export const fetchTransactions = accountId => {
     return (dispatch) => {
         dispatch(requestTransactions(accountId));
-        fetch(`http://localhost:3001/transactions?accountId=${accountId}`)
+        fetch(`${BASE_URL}/transactions?accountId=${accountId}`)
             .then(response => response.json())
             .then(transactions => {
                 dispatch(receiveTransactions(transactions))
@@ -55,7 +57,7 @@ export const fetchTransactions = accountId => {
 
 export const createAccount = (name, openingBalance) => {
     return (dispatch) => {
-        fetch('http://localhost:3001/accounts', {
+        fetch(`${BASE_URL}/accounts`, {
             method: 'POST',
             body: JSON.stringify({ name, balance: openingBalance }),
             headers: new Headers({
@@ -72,7 +74,7 @@ export const createAccount = (name, openingBalance) => {
 }
 
 const postTransaction = (description, debit, credit, accountId) => {
-    return fetch('http://localhost:3001/transactions', {
+    return fetch(`${BASE_URL}/transactions`, {
         method: 'POST',
         body: JSON.stringify({ date: new Date(), description, debit, credit, accountId }),
         headers: new Headers({
@@ -86,7 +88,7 @@ const postTransaction = (description, debit, credit, accountId) => {
 }
 
 const updateAccountBalance = (accountId, newBalance) => {
-    return fetch(`http://localhost:3001/accounts/${accountId}`, {
+    return fetch(`${BASE_URL}/accounts/${accountId}`, {
         method: 'PATCH',
         body: JSON.stringify({ balance: newBalance }),
         headers: new Headers({
