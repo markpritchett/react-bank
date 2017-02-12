@@ -2,6 +2,7 @@
   "name": "react-bank-ui",
   "version": "0.1.0",
   "devDependencies": {
+    "deep-freeze": "0.0.1",
     "nock": "^9.0.5",
     "react-scripts": "0.8.5",
     "redux-devtools": "^3.3.2",
