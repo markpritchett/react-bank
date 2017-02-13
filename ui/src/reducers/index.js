@@ -54,7 +54,14 @@ const accounts = (state = {
       })
     case ActionTypes.HIDE_NEW_ACCOUNTS_FORM:
       return Object.assign({}, state, {
-        showNewAccountForm: false
+        showNewAccountForm: false,
+        nameValidationMessage: null,
+        openingBalanceValidationMessage: null
+      })
+    case ActionTypes.CREATE_ACCOUNT_VALIDATION_FAILURE:
+      return Object.assign({}, state, {
+        nameValidationMessage: action.validationResult.nameValidationMessage,
+        openingBalanceValidationMessage: action.validationResult.openingBalanceValidationMessage
       })
     case ActionTypes.ACCOUNT_CREATED:
       return Object.assign({}, state, {

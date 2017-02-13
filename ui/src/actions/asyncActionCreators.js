@@ -9,11 +9,13 @@ import {
     receiveAccounts,
     requestTransactions,
     receiveTransactions,
+    invalidCreateAccountRequest,
     accountCreated,
     hideNewAccountForm,
     refreshAccountBalance,
     hideTransferFunds
 } from './actionCreators'
+import formatMoney from '../formatMoney'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL
 
@@ -55,8 +57,60 @@ export const fetchTransactions = accountId => {
     }
 }
 
+const validateCreateAccountRequest = (name, openingBalance, existingAccounts) => {
+    let result = {
+        isValid: true,
+        nameValidationMessage: null,
+        openingBalanceValidationMessage: null
+    }
+
+    if (!name) {
+        result.isValid = false;
+        result.nameValidationMessage = 'Account Name is required'
+    }
+
+    if (existingAccounts.find(account => account.name.toLowerCase() === name.toLowerCase())) {
+        result.isValid = false;
+        result.nameValidationMessage = `Account Name ${name} already exists!`
+    }
+
+    if (typeof openingBalance === 'string' && openingBalance.trim().length === 0) {
+        result.isValid = false;
+        result.openingBalanceValidationMessage = 'Opening Balance is required'
+    } else {
+        openingBalance = parseFloat(openingBalance)
+        if (Number.isNaN(openingBalance)) {
+            result.isValid = false;
+            result.openingBalanceValidationMessage = 'Opening Balance must be a number'
+
+        } else if (openingBalance < 0.01) {
+            result.isValid = false;
+            result.openingBalanceValidationMessage = `Opening Balance cannot be less than ${formatMoney(0.01)}`
+        } else if (openingBalance > 1000.00) {
+            result.isValid = false;
+            result.openingBalanceValidationMessage = `Jeez, I know this is a fake app, but we can't give out more than ${formatMoney(1000.00)}`
+        }
+    }
+
+    return result
+}
+
 export const createAccount = (name, openingBalance) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const { accounts } = getState()
+
+        let validationResult = validateCreateAccountRequest(name, openingBalance, accounts.items || [])
+
+        if (!validationResult.isValid) {
+            return Promise.resolve(dispatch(invalidCreateAccountRequest(validationResult)))
+        }
+
+        name = name.trim()
+
+        if (typeof openingBalance === 'string') {
+            openingBalance = parseFloat(openingBalance.trim())
+        }
+
         fetch(`${BASE_URL}/accounts`, {
             method: 'POST',
             body: JSON.stringify({ name, balance: openingBalance }),
@@ -67,9 +121,8 @@ export const createAccount = (name, openingBalance) => {
             .then(response => response.json())
             .then(newAccount => {
                 dispatch(accountCreated(newAccount))
+                dispatch(hideNewAccountForm())
             })
-
-        dispatch(hideNewAccountForm())
     }
 }
 

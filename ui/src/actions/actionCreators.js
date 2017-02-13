@@ -52,6 +52,11 @@ export const hideNewAccountForm = () => ({
     type: types.HIDE_NEW_ACCOUNTS_FORM
 })
 
+export const invalidCreateAccountRequest = validationResult => ({
+    type: types.CREATE_ACCOUNT_VALIDATION_FAILURE,
+    validationResult
+})
+
 export const accountCreated = account => ({
     type: types.ACCOUNT_CREATED,
     account
