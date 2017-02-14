@@ -70,6 +70,11 @@ export const hideTransferFunds = () => ({
     type: types.HIDE_TRANSFER_FUNDS
 })
 
+export const invalidTransferFundsRequest = validationResult => ({
+    type: types.TRANSFER_FUNDS_VALIDATION_FAILURE,
+    validationResult
+})
+
 export const transferFundsComplete = () => ({
     type: types.TRANSFER_FUNDS_COMPLETE
 })

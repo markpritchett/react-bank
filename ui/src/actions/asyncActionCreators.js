@@ -13,7 +13,8 @@ import {
     accountCreated,
     hideNewAccountForm,
     refreshAccountBalance,
-    hideTransferFunds
+    hideTransferFunds,
+    invalidTransferFundsRequest
 } from './actionCreators'
 import formatMoney from '../formatMoney'
 
@@ -164,9 +165,55 @@ const debitAccount = (account, amount) => {
     return updateAccountBalance(account.id, newBalance);
 }
 
+const validateTransferFundsRequest = (fromAccount, toAccount, transferAmount, existingAccounts) => {
+    let result = {
+        isValid: true,
+        fromAccountValidationMessage: null,
+        toAccountValidationMessage: null,
+        transferAmountValidationMessage: null
+    }
+
+    if (!fromAccount) {
+        result.isValid = false;
+        result.fromAccountValidationMessage = 'From Account is required'
+    }
+
+    if (!toAccount) {
+        result.isValid = false;
+        result.toAccountValidationMessage = 'To Account is required'
+    }
+
+    if (typeof transferAmount === 'string' && transferAmount.trim().length === 0) {
+        result.isValid = false;
+        result.transferAmountValidationMessage = 'Transfer Amount is required'
+    } else {
+        transferAmount = parseFloat(transferAmount)
+        if (Number.isNaN(transferAmount)) {
+            result.isValid = false;
+            result.transferAmountValidationMessage = 'Transfer Amount must be a number'
+        } else if (transferAmount < 0.01) {
+            result.isValid = false;
+            result.transferAmountValidationMessage = `Transfer Amount cannot be less that ${formatMoney(0.01)}`
+        } else if (fromAccount && transferAmount > fromAccount.balance) {
+            result.isValid = false;
+            result.transferAmountValidationMessage = `Insufficent funds in account ${fromAccount.name}.  You can transfer up to ${formatMoney(fromAccount.balance)}`
+        }
+    }
+
+    return result
+}
+
 export const transferFunds = (fromAccount, toAccount, transferAmount) => {
-    transferAmount = parseFloat(transferAmount)
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const { accounts } = getState()
+
+        let validationResult = validateTransferFundsRequest(fromAccount, toAccount, transferAmount, accounts || [])
+
+        if (!validationResult.isValid) {
+            return Promise.resolve(dispatch(invalidTransferFundsRequest(validationResult)))
+        }
+        transferAmount = parseFloat(transferAmount)
+
         postTransaction(`Transfer to ${toAccount.name}`, transferAmount, null, fromAccount.id)
 
         debitAccount(fromAccount, transferAmount)

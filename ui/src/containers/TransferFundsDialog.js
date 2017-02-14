@@ -6,18 +6,13 @@ import SelectField from 'material-ui/SelectField'
 import FlatButton from 'material-ui/FlatButton'
 import MenuItem from 'material-ui/MenuItem'
 import { hideTransferFunds, transferFunds } from '../actions'
-import formatMoney from '../formatMoney'
 
 class TransferFundsDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {
             fromAccount: null,
-            fromAccountErrorMessage: null,
-            toAccount: null,
-            toAccountErrorMessage: null,
-            transferAmount: null,
-            transferAmountErrorMessage: null
+            toAccount: null
         }
     }
 
@@ -27,52 +22,9 @@ class TransferFundsDialog extends Component {
     submitRequest() {
         const { dispatch } = this.props
 
-        let transferAmount = this.refs.transferAmount.input.value.trim()
+        let transferAmount = this.refs.transferAmount.input.value
 
-        let hasErrors = this.hasErrors(this.state.fromAccount, this.state.toAccount, transferAmount)
-
-        if (hasErrors) {
-            return
-        }
-
-        dispatch(transferFunds(this.state.fromAccount, this.state.toAccount, parseFloat(transferAmount)))
-    }
-
-    hasErrors(fromAccount, toAccount, transferAmount) {
-        this.setState({ fromAccountErrorMessage: null })
-        this.setState({ toAccountErrorMessage: null })
-        this.setState({ transferAmountErrorMessage: null })
-
-        let hasErrors = false
-
-        if (!fromAccount) {
-            this.setState({ fromAccountErrorMessage: 'From Account is required' })
-            hasErrors = true
-        }
-
-        if (!toAccount) {
-            this.setState({ toAccountErrorMessage: 'To Account is required' })
-            hasErrors = true
-        }
-
-        if (!transferAmount) {
-            this.setState({ transferAmountErrorMessage: 'Amount is required' })
-            hasErrors = true
-        } else {
-            transferAmount = parseFloat(transferAmount)
-
-            if (Number.isNaN(transferAmount)) {
-                this.setState({ transferAmountErrorMessage: 'Amount must be a number' })
-                hasErrors = true
-            } else if (transferAmount < 0.01) {
-                this.setState({ openingBalanceErrorMessage: `Amount cannot be less that ${formatMoney(0.01)}` })
-            } else if (transferAmount > fromAccount.balance) {
-                this.setState({ transferAmountErrorMessage: `Insufficent funds in account ${fromAccount.name}.  You can transfer up to ${formatMoney(fromAccount.balance)}` })
-                hasErrors = true
-            }
-        }
-
-        return hasErrors
+        dispatch(transferFunds(this.state.fromAccount, this.state.toAccount, transferAmount))
     }
 
     cancel() {
@@ -81,7 +33,7 @@ class TransferFundsDialog extends Component {
     }
 
     render() {
-        const { accounts, showTransferFunds } = this.props
+        const { accounts, showTransferFunds, fromAccountValidationMessage, toAccountValidationMessage, transferAmountValidationMessage } = this.props
 
         const actions = [
             <FlatButton
@@ -110,7 +62,7 @@ class TransferFundsDialog extends Component {
                         floatingLabelText="From Account"
                         value={this.state.fromAccount}
                         onChange={this.handleFromAccountChange}
-                        errorText={this.state.fromAccountErrorMessage}
+                        errorText={fromAccountValidationMessage}
                     >
                         {
                             accounts.map(account => <MenuItem key={account.id} value={account} primaryText={account.name} />)
@@ -122,7 +74,7 @@ class TransferFundsDialog extends Component {
                         floatingLabelText="To Account"
                         value={this.state.toAccount}
                         onChange={this.handleToAccountChange}
-                        errorText={this.state.toAccountErrorMessage}
+                        errorText={toAccountValidationMessage}
                     >
                         {
                             accounts.map(account => <MenuItem key={account.id} value={account} primaryText={account.name} />)
@@ -130,10 +82,10 @@ class TransferFundsDialog extends Component {
                     </SelectField>
                 </div>
                 <div>
-                    <TextField ref="transferAmount" hintText="Amount" errorText={this.state.transferAmountErrorMessage} />
+                    <TextField ref="transferAmount" hintText="Amount" errorText={transferAmountValidationMessage} />
                 </div>
             </Dialog>
-        );
+        )
     }
 }
 
@@ -141,7 +93,10 @@ const mapStateToProps = state => {
     const { accounts } = state
     return {
         accounts: accounts.items,
-        showTransferFunds: accounts.showTransferFunds
+        showTransferFunds: accounts.showTransferFunds,
+        fromAccountValidationMessage: accounts.fromAccountValidationMessage,
+        toAccountValidationMessage: accounts.toAccountValidationMessage,
+        transferAmountValidationMessage: accounts.transferAmountValidationMessage
     }
 }
 

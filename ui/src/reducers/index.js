@@ -73,11 +73,20 @@ const accounts = (state = {
       })
     case ActionTypes.HIDE_TRANSFER_FUNDS:
       return Object.assign({}, state, {
-        showTransferFunds: false
+        showTransferFunds: false,
+        fromAccountValidationMessage: null,
+        toAccountValidationMessage: null,
+        transferAmountValidationMessage: null
+      })
+    case ActionTypes.TRANSFER_FUNDS_VALIDATION_FAILURE:
+      return Object.assign({}, state, {
+        fromAccountValidationMessage: action.validationResult.fromAccountValidationMessage,
+        toAccountValidationMessage: action.validationResult.toAccountValidationMessage,
+        transferAmountValidationMessage: action.validationResult.transferAmountValidationMessage
       })
     case ActionTypes.UPDATE_ACCOUNT_BALANCE:
       let index = state.items.indexOf(state.items.find(a => a.id === action.accountId))
-      let account = Object.assign({}, state.items[index], {balance: action.newBalance})
+      let account = Object.assign({}, state.items[index], { balance: action.newBalance })
       let result = Object.assign({}, state, {
         items: [
           ...state.items.slice(0, index),
