@@ -200,6 +200,13 @@ const validateTransferFundsRequest = (fromAccount, toAccount, transferAmount, ex
         }
     }
 
+    if (result.isValid) {
+        if (toAccount.id === fromAccount.id) {
+            result.isValid = false
+            result.toAccountValidationMessage = 'You cannot transfer funds to the same account'
+        }
+    }
+
     return result
 }
 

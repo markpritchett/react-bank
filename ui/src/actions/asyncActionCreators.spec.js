@@ -238,7 +238,7 @@ describe('Transfer Funds', () => {
                     expect(store.getActions()).toEqual(expectedActions)
                 })
         })
-        
+
         it('should ensure transfer amount is a number', () => {
             const accounts = [
                 { id: 1, name: 'Current Account', balance: 100.00 },
@@ -294,7 +294,7 @@ describe('Transfer Funds', () => {
                     expect(store.getActions()).toEqual(expectedActions)
                 })
         })
-        
+
         it('should ensure transfer amount cannot exceed amount available in from account', () => {
             const accounts = [
                 { id: 1, name: 'Current Account', balance: 100.00 },
@@ -318,6 +318,34 @@ describe('Transfer Funds', () => {
             }]
 
             return store.dispatch(actions.transferFunds(accounts[0], accounts[1], '200.00'))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions)
+                })
+        })
+
+        it('should prevent transferring funds between the same account', () => {
+            const accounts = [
+                { id: 1, name: 'Current Account', balance: 100.00 },
+                { id: 2, name: 'Savings Account', balance: 50.00 }
+            ]
+
+            const store = mockStore({
+                accounts: {
+                    items: accounts
+                }
+            })
+
+            const expectedActions = [{
+                type: actionTypes.TRANSFER_FUNDS_VALIDATION_FAILURE,
+                validationResult: {
+                    isValid: false,
+                    fromAccountValidationMessage: null,
+                    toAccountValidationMessage: 'You cannot transfer funds to the same account',
+                    transferAmountValidationMessage: null
+                }
+            }]
+
+            return store.dispatch(actions.transferFunds(accounts[0], accounts[0], '50.00'))
                 .then(() => {
                     expect(store.getActions()).toEqual(expectedActions)
                 })
