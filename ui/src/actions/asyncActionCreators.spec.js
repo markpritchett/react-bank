@@ -352,3 +352,27 @@ describe('Transfer Funds', () => {
         })
     })
 })
+
+describe('Login', () => {
+    describe('Validation', () => {
+        const store = mockStore({})
+
+        const expectedActions = [{
+            type: actionTypes.LOGIN_VALIDATION_FAILURE,
+            validationResult: {
+                isValid: false,
+                usernameValidationMessage: 'Username is required',
+                usernameValidationMessage: null
+            }
+        }]
+
+        const credentials = {
+            username: '',
+            password: 'password'
+        }
+        return store.dispatch(actions.attemptLogin(credentials))
+            .then(() => {
+                expect(store.getActions()).toEqual(expectedActions)
+            })
+    })
+})

@@ -13,9 +13,9 @@ export const loginSuccessful = () => ({
     type: types.REQUEST_LOGIN_SUCCESS
 })
 
-export const loginFailed = errorMessage => ({
+export const loginFailed = validationResult => ({
     type: types.REQUEST_LOGIN_FAILURE,
-    errorMessage
+    validationResult
 })
 
 export const requestLogout = () => ({

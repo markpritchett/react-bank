@@ -18,16 +18,21 @@ const login = (state = {
       return state;
     case ActionTypes.REQUEST_LOGIN_SUCCESS:
       return Object.assign({}, state, {
-        authenticated: true
+        authenticated: true,
+        usernameValidationMessage: null,
+        passwordValidationMessage: null
       })
     case ActionTypes.REQUEST_LOGOUT_SUCCESS:
       return Object.assign({}, state, {
-        authenticated: false
+        authenticated: false,
+        usernameValidationMessage: null,
+        passwordValidationMessage: null
       })
     case ActionTypes.REQUEST_LOGIN_FAILURE:
       return Object.assign({}, state, {
         authenticated: false,
-        errorMessage: action.errorMessage
+        usernameValidationMessage: action.validationResult.usernameValidationMessage,
+        passwordValidationMessage: action.validationResult.passwordValidationMessage
       })
     default:
       return state

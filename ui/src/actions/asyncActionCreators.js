@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router'
 import {
     requestLogin,
     loginSuccessful,
+    loginFailed,
     requestLogout,
     logoutSuccessful,
     requestAccounts,
@@ -20,11 +21,39 @@ import formatMoney from '../formatMoney'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL
 
+const validateLoginRequest = credentials => {
+    let result = {
+        isValid: true,
+        usernameValidationMessage: null,
+        passwordValidationMessage: null
+    }
+
+    if (!credentials.username) {
+        result.isValid = false
+        result.usernameValidationMessage = 'Username is required'
+    }
+
+    if (!credentials.password) {
+        result.isValid = false
+        result.passwordValidationMessage = 'Password is required'
+    }
+
+    return result
+}
+
 export const attemptLogin = credentials => {
-    return (dispatch) => {
+    return dispatch => {
+        let validationResult = validateLoginRequest(credentials)
+
+        if (!validationResult.isValid) {
+            return Promise.resolve(dispatch(loginFailed(validationResult)))
+        }
+
         dispatch(requestLogin(credentials))
+
         dispatch(loginSuccessful())
         browserHistory.push('/accounts')
+        return Promise.resolve()
     }
 }
 

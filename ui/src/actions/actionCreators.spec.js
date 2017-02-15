@@ -38,12 +38,18 @@ describe('action creators', () => {
     it('should create login failed action', () => {
         const errorMessage = 'You\'re name\'s not down, you\'re not coming in'
 
-        const expectedAction = {
-            type: 'REQUEST_LOGIN_FAILURE',
-            errorMessage
+        const validationResult = {
+            isValid: false,
+            usernameValidationMessage: 'Username is required',
+            passwordValidationMessage: 'Password is required'
         }
 
-        const actualAction = actions.loginFailed(errorMessage)
+        const expectedAction = {
+            type: 'REQUEST_LOGIN_FAILURE',
+            validationResult
+        }
+
+        const actualAction = actions.loginFailed(validationResult)
 
         expect(actualAction).toEqual(expectedAction)
     })

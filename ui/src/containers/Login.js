@@ -5,47 +5,33 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { attemptLogin } from '../actions'
 
 class Login extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            loginClicked: false,
-            usernameSet: false,
-            passwordSet: false
-        };
-    }
     onLoginClick() {
         const { dispatch } = this.props
 
         let username = this.refs.username.input.value
         let password = this.refs.password.input.value
 
-        this.setState({ loginClicked: true })
-        this.setState({ usernameSet: !!username })
-        this.setState({ passwordSet: !!password })
-
-        if (!username || !password) {
-            return;
-        }
-
         dispatch(attemptLogin({
             username,
             password
         }))
     }
-    renderErrorText(label) {
-        return (
-            this.state.loginClicked && !this.state[`${label.toLowerCase()}Set`] && `${label} is required`
-        )
-    }
+
     render() {
+        const { usernameValidationMessage, passwordValidationMessage } = this.props
         return (
             <div>
-                <h2>Login</h2>
+                <h3>Login</h3>
+
+                <h4>
+                    Enter your username and password <span style={{color: 'grey', fontSize: 'smaller'}}>(anything will do, it's not real)</span>
+                </h4>
+                
                 <div>
                     <TextField
                         hintText="Username"
                         ref="username"
-                        errorText={this.renderErrorText("Username")}
+                        errorText={usernameValidationMessage}
                     />
                 </div>
                 <div>
@@ -54,13 +40,21 @@ class Login extends Component {
                         floatingLabelText="Password"
                         type="password"
                         ref="password"
-                        errorText={this.renderErrorText("Password")}
+                        errorText={passwordValidationMessage}
                     />
                 </div>
                 <RaisedButton label="Login" primary={true} onClick={() => this.onLoginClick()} />
             </div>
-        );
+        )
     }
 }
 
-export default connect()(Login) 
+const mapStateToProps = state => {
+    const { login } = state
+    return {
+        usernameValidationMessage: login.usernameValidationMessage,
+        passwordValidationMessage: login.passwordValidationMessage
+    }
+}
+
+export default connect(mapStateToProps)(Login) 
