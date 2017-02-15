@@ -4,7 +4,7 @@
   "devDependencies": {
     "deep-freeze": "0.0.1",
     "nock": "^9.0.5",
-    "react-scripts": "0.8.5",
+    "react-scripts": "0.9.0",
     "redux-devtools": "^3.3.2",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.2.0",

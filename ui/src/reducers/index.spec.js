@@ -23,7 +23,9 @@ describe('reducers', () => {
         }
 
         const expectedStateAfter = {
-            authenticated: true
+            authenticated: true,
+            usernameValidationMessage: null,
+            passwordValidationMessage: null
         }
 
         deepFreeze(stateBefore)
