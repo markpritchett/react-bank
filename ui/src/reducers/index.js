@@ -51,7 +51,7 @@ const accounts = (state = {
     case ActionTypes.RECEIVE_ACCOUNTS:
       return Object.assign({}, state, {
         isFetching: true,
-        items: action.accounts
+        items: action.response
       })
     case ActionTypes.SHOW_NEW_ACCOUNTS_FORM:
       return Object.assign({}, state, {
@@ -68,9 +68,10 @@ const accounts = (state = {
         nameValidationMessage: action.validationResult.nameValidationMessage,
         openingBalanceValidationMessage: action.validationResult.openingBalanceValidationMessage
       })
-    case ActionTypes.ACCOUNT_CREATED:
+    case ActionTypes.CREATE_ACCOUNT_SUCCESS:
       return Object.assign({}, state, {
-        items: [...state.items, action.account]
+        items: [...state.items, action.response],
+        showNewAccountForm: false
       })
     case ActionTypes.SHOW_TRANSFER_FUNDS:
       return Object.assign({}, state, {
@@ -89,9 +90,9 @@ const accounts = (state = {
         toAccountValidationMessage: action.validationResult.toAccountValidationMessage,
         transferAmountValidationMessage: action.validationResult.transferAmountValidationMessage
       })
-    case ActionTypes.UPDATE_ACCOUNT_BALANCE:
-      let index = state.items.indexOf(state.items.find(a => a.id === action.accountId))
-      let account = Object.assign({}, state.items[index], { balance: action.newBalance })
+    case ActionTypes.UPDATE_ACCOUNT_BALANCE_SUCCESS:
+      let index = state.items.indexOf(state.items.find(a => a.id === action.response.id))
+      let account = Object.assign({}, state.items[index], { balance: action.response.balance })
       let result = Object.assign({}, state, {
         items: [
           ...state.items.slice(0, index),
@@ -116,7 +117,7 @@ const transactions = (state = {
     case ActionTypes.RECEIVE_TRANSACTIONS:
       return Object.assign({}, state, {
         isFetching: true,
-        items: action.transactions
+        items: action.response
       })
     default:
       return state

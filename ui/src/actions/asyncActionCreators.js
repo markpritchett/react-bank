@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch'
+
 import { browserHistory } from 'react-router'
 import {
     requestLogin,
@@ -6,20 +6,15 @@ import {
     loginFailed,
     requestLogout,
     logoutSuccessful,
-    requestAccounts,
-    receiveAccounts,
-    requestTransactions,
-    receiveTransactions,
     invalidCreateAccountRequest,
-    accountCreated,
-    hideNewAccountForm,
-    refreshAccountBalance,
     hideTransferFunds,
     invalidTransferFundsRequest
 } from './actionCreators'
-import formatMoney from '../formatMoney'
 
-const BASE_URL = process.env.REACT_APP_BASE_URL
+import * as actionTypes from './constants'
+
+import formatMoney from '../formatMoney'
+import { CALL_API } from '../middleware/api'
 
 const validateLoginRequest = credentials => {
     let result = {
@@ -65,27 +60,19 @@ export const attemptLogout = () => {
     }
 }
 
-export const fetchAccounts = () => {
-    return dispatch => {
-        dispatch(requestAccounts());
-        return fetch(`${BASE_URL}/accounts`)
-            .then(response => response.json())
-            .then(accounts => {
-                dispatch(receiveAccounts(accounts))
-            })
+export const fetchAccounts = () => ({
+    [CALL_API]: {
+        types: [actionTypes.REQUEST_ACCOUNTS, actionTypes.RECEIVE_ACCOUNTS, actionTypes.REQUEST_ACCOUNTS_FAILURE],
+        endpoint: '/accounts'
     }
-}
+})
 
-export const fetchTransactions = accountId => {
-    return (dispatch) => {
-        dispatch(requestTransactions(accountId));
-        fetch(`${BASE_URL}/transactions?accountId=${accountId}`)
-            .then(response => response.json())
-            .then(transactions => {
-                dispatch(receiveTransactions(transactions))
-            })
+export const fetchTransactions = accountId => ({
+    [CALL_API]: {
+        types: ['REQUEST_TRANSACTIONS', 'RECEIVE_TRANSACTIONS', 'REQUEST_TRANSACTIONS_FAILURE'],
+        endpoint: `/transactions?accountId=${accountId}`
     }
-}
+})
 
 const validateCreateAccountRequest = (name, openingBalance, existingAccounts) => {
     let result = {
@@ -125,6 +112,15 @@ const validateCreateAccountRequest = (name, openingBalance, existingAccounts) =>
     return result
 }
 
+const submitCreateAccountRequest = (name, openingBalance) => ({
+    [CALL_API]: {
+        types: [actionTypes.CREATE_ACCOUNT_REQUEST, actionTypes.CREATE_ACCOUNT_SUCCESS, actionTypes.CREATE_ACCOUNT_FAILED],
+        endpoint: '/accounts',
+        method: 'POST',
+        data: { name, balance: openingBalance }
+    }
+})
+
 export const createAccount = (name, openingBalance) => {
     return (dispatch, getState) => {
         const { accounts } = getState()
@@ -141,48 +137,27 @@ export const createAccount = (name, openingBalance) => {
             openingBalance = parseFloat(openingBalance.trim())
         }
 
-        fetch(`${BASE_URL}/accounts`, {
-            method: 'POST',
-            body: JSON.stringify({ name, balance: openingBalance }),
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=utf-8'
-            })
-        })
-            .then(response => response.json())
-            .then(newAccount => {
-                dispatch(accountCreated(newAccount))
-                dispatch(hideNewAccountForm())
-            })
+        dispatch(submitCreateAccountRequest(name, openingBalance))
     }
 }
 
-const postTransaction = (description, debit, credit, accountId) => {
-    return fetch(`${BASE_URL}/transactions`, {
+const postTransaction = (description, debit, credit, accountId) => ({
+    [CALL_API]: {
+        types: [actionTypes.CREATE_TRANSACTION_REQUEST, actionTypes.CREATE_TRANSACTION_SUCCESS, actionTypes.CREATE_TRANSACTION_FAILED],
+        endpoint: '/transactions',
         method: 'POST',
-        body: JSON.stringify({ date: new Date(), description, debit, credit, accountId }),
-        headers: new Headers({
-            'Content-Type': 'application/json; charset=utf-8'
-        })
-    })
-        .then(response => response.json())
-        .then(newTransaction => {
-            return newTransaction
-        })
-}
+        data: { date: new Date(), description, debit, credit, accountId }
+    }
+})
 
-const updateAccountBalance = (accountId, newBalance) => {
-    return fetch(`${BASE_URL}/accounts/${accountId}`, {
+const updateAccountBalance = (accountId, newBalance) => ({
+    [CALL_API]: {
+        types: [actionTypes.UPDATE_ACCOUNT_BALANCE_REQUEST, actionTypes.UPDATE_ACCOUNT_BALANCE_SUCCESS, actionTypes.UPDATE_ACCOUNT_BALANCE_FAILED],
+        endpoint: `/accounts/${accountId}`,
         method: 'PATCH',
-        body: JSON.stringify({ balance: newBalance }),
-        headers: new Headers({
-            'Content-Type': 'application/json; charset=utf-8'
-        })
-    })
-        .then(response => response.json())
-        .then(result => {
-            return result
-        })
-}
+        data: { balance: newBalance }
+    }
+})
 
 const creditAccount = (account, amount) => {
     var newBalance = (account.balance + amount);
@@ -250,19 +225,13 @@ export const transferFunds = (fromAccount, toAccount, transferAmount) => {
         }
         transferAmount = parseFloat(transferAmount)
 
-        postTransaction(`Transfer to ${toAccount.name}`, transferAmount, null, fromAccount.id)
+        dispatch(postTransaction(`Transfer to ${toAccount.name}`, transferAmount, null, fromAccount.id))
 
-        debitAccount(fromAccount, transferAmount)
-            .then(updatedAccount => {
-                dispatch(refreshAccountBalance(updatedAccount.id, updatedAccount.balance))
-            })
+        dispatch(debitAccount(fromAccount, transferAmount))
 
-        postTransaction(`Transfer from ${fromAccount.name}`, null, transferAmount, toAccount.id)
+        dispatch(postTransaction(`Transfer from ${fromAccount.name}`, null, transferAmount, toAccount.id))
 
-        creditAccount(toAccount, transferAmount)
-            .then(updatedAccount => {
-                dispatch(refreshAccountBalance(updatedAccount.id, updatedAccount.balance))
-            })
+        dispatch(creditAccount(toAccount, transferAmount))
 
         dispatch(hideTransferFunds())
     }

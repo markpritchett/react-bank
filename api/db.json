@@ -3,12 +3,12 @@
     {
       "id": 1,
       "name": "Current Account",
-      "balance": 250.00
+      "balance": 200
     },
     {
       "id": 2,
       "name": "Savings",
-      "balance": 125.00
+      "balance": 175
     }
   ],
   "transactions": [
@@ -27,6 +27,22 @@
       "debit": null,
       "credit": 0.01,
       "accountId": 1
+    },
+    {
+      "date": "2017-02-15T22:22:45.488Z",
+      "description": "Transfer to Savings",
+      "debit": 50,
+      "credit": null,
+      "accountId": 1,
+      "id": 3
+    },
+    {
+      "date": "2017-02-15T22:22:45.500Z",
+      "description": "Transfer from Current Account",
+      "debit": null,
+      "credit": 50,
+      "accountId": 2,
+      "id": 4
     }
   ]
 }
