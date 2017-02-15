@@ -8,7 +8,7 @@ const Logout = ({
         <span>
             {
                 visible &&
-                <FlatButton label="Logout" onClick={() => onClick()} />
+                <FlatButton label="Logout" onClick={onClick} />
             }
         </span>
     )

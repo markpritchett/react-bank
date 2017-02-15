@@ -28,7 +28,7 @@ class AccountsPage extends Component {
     }
 
     render() {
-        const { accounts, isFetching, onAddAccountClick, showNewAccountForm, showTransferFunds, onTransferFundsClick } = this.props
+        const { accounts, onAddAccountClick, showNewAccountForm, showTransferFunds, onTransferFundsClick } = this.props
         return (
             <div>
                 <h2>
@@ -38,7 +38,6 @@ class AccountsPage extends Component {
                         style={style}
                         labelPosition="before"
                         primary={true}
-
                         icon={<SwapIcon />}
                         onTouchTap={onTransferFundsClick}
                     />
@@ -49,12 +48,8 @@ class AccountsPage extends Component {
                 <FloatingActionButton style={style} title="Create a new account" onTouchTap={onAddAccountClick}>
                     <ContentAdd />
                 </FloatingActionButton>
-                {
-                    showNewAccountForm && <NewAccountDialog />
-                }
-                {
-                    showTransferFunds && <TransferFundsDialog />
-                }
+                {showNewAccountForm && <NewAccountDialog />}
+                {showTransferFunds && <TransferFundsDialog />}
             </div>
         )
     }
@@ -71,7 +66,7 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
         onAddAccountClick: () => {
             dispatch(showNewAccountForm())

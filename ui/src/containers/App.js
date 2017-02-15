@@ -5,10 +5,11 @@ import AppBar from 'material-ui/AppBar'
 import { resetErrorMessage, attemptLogout } from '../actions'
 import './app.css'
 import Logout from '../components/Logout'
+
 const styles = {
   title: {
     cursor: 'pointer',
-  },
+  }
 }
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
 
   renderErrorMessage() {
     const { errorMessage } = this.props
+
     if (!errorMessage) {
       return null
     }
@@ -70,7 +72,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     onLogoutClick: () => {
       dispatch(attemptLogout())
