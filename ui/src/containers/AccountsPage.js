@@ -28,19 +28,23 @@ class AccountsPage extends Component {
     }
 
     render() {
-        const { accounts, onAddAccountClick, showNewAccountForm, showTransferFunds, onTransferFundsClick } = this.props
+        const { accounts, onAddAccountClick, showNewAccountForm, showTransferFunds, onTransferFundsClick, showTransferFundsButton } = this.props
         return (
             <div>
                 <h2>
                     Accounts
-                    <FlatButton
-                        label="Transfer funds"
-                        style={style}
-                        labelPosition="before"
-                        primary={true}
-                        icon={<SwapIcon />}
-                        onTouchTap={onTransferFundsClick}
-                    />
+                    {
+                        showTransferFundsButton &&
+
+                        <FlatButton
+                            label="Transfer funds"
+                            style={style}
+                            labelPosition="before"
+                            primary={true}
+                            icon={<SwapIcon />}
+                            onTouchTap={onTransferFundsClick}
+                        />
+                    }
                 </h2>
                 <div>
                     {accounts.map(account => <Account key={account.id} {...account} viewTransactions={this.goToTransactions} />)}
@@ -62,7 +66,9 @@ const mapStateToProps = state => {
         accounts: accounts.items,
         authenticated: login.authenticated,
         showNewAccountForm: accounts.showNewAccountForm,
-        showTransferFunds: accounts.showTransferFunds
+        showTransferFunds: accounts.showTransferFunds,
+        showTransferFundsButton: accounts.showTransferFundsButton
+
     }
 }
 

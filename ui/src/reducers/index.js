@@ -41,6 +41,7 @@ const login = (state = {
 
 const accounts = (state = {
   isFetching: false,
+  showTransferFundsButton: false,
   items: []
 }, action) => {
   switch (action.type) {
@@ -51,7 +52,8 @@ const accounts = (state = {
     case ActionTypes.RECEIVE_ACCOUNTS:
       return Object.assign({}, state, {
         isFetching: true,
-        items: action.response
+        items: action.response,
+        showTransferFundsButton: Array.isArray(action.response) && action.response.length > 1
       })
     case ActionTypes.SHOW_NEW_ACCOUNTS_FORM:
       return Object.assign({}, state, {
@@ -71,7 +73,8 @@ const accounts = (state = {
     case ActionTypes.CREATE_ACCOUNT_SUCCESS:
       return Object.assign({}, state, {
         items: [...state.items, action.response],
-        showNewAccountForm: false
+        showNewAccountForm: false,
+        showTransferFundsButton: items.length > 1
       })
     case ActionTypes.SHOW_TRANSFER_FUNDS:
       return Object.assign({}, state, {
