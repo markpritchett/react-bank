@@ -1,9 +1,7 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
-import nock from 'nock'
 import * as actionTypes from './constants'
 import * as actions from './asyncActionCreators'
-import {CALL_API} from '../middleware/api'
 
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
@@ -321,29 +319,5 @@ describe('Transfer Funds', () => {
                     expect(store.getActions()).toEqual(expectedActions)
                 })
         })
-    })
-})
-
-describe('Login', () => {
-    describe('Validation', () => {
-        const store = mockStore({})
-
-        const expectedActions = [{
-            type: actionTypes.LOGIN_VALIDATION_FAILURE,
-            validationResult: {
-                isValid: false,
-                usernameValidationMessage: 'Username is required',
-                usernameValidationMessage: null
-            }
-        }]
-
-        const credentials = {
-            username: '',
-            password: 'password'
-        }
-        return store.dispatch(actions.attemptLogin(credentials))
-            .then(() => {
-                expect(store.getActions()).toEqual(expectedActions)
-            })
     })
 })

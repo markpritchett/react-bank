@@ -1,4 +1,3 @@
-
 import { browserHistory } from 'react-router'
 import {
     requestLogin,
@@ -160,16 +159,16 @@ const updateAccountBalance = (accountId, newBalance) => ({
 })
 
 const creditAccount = (account, amount) => {
-    var newBalance = (account.balance + amount);
+    const newBalance = (account.balance + amount);
     return updateAccountBalance(account.id, newBalance);
 }
 
 const debitAccount = (account, amount) => {
-    var newBalance = account.balance - amount;
+    const newBalance = account.balance - amount;
     return updateAccountBalance(account.id, newBalance);
 }
 
-const validateTransferFundsRequest = (fromAccount, toAccount, transferAmount, existingAccounts) => {
+const validateTransferFundsRequest = (fromAccount, toAccount, transferAmount) => {
     let result = {
         isValid: true,
         fromAccountValidationMessage: null,
@@ -215,10 +214,8 @@ const validateTransferFundsRequest = (fromAccount, toAccount, transferAmount, ex
 }
 
 export const transferFunds = (fromAccount, toAccount, transferAmount) => {
-    return (dispatch, getState) => {
-        const { accounts } = getState()
-
-        let validationResult = validateTransferFundsRequest(fromAccount, toAccount, transferAmount, accounts || [])
+    return dispatch => {
+        let validationResult = validateTransferFundsRequest(fromAccount, toAccount, transferAmount)
 
         if (!validationResult.isValid) {
             return Promise.resolve(dispatch(invalidTransferFundsRequest(validationResult)))
